@@ -1,0 +1,81 @@
+2025-03-10 01:25:39,922 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:25:43,236 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:25:45,091 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:25:45,521 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:25:51,249 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:25:51,929 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:25:53,438 - utils - INFO - Trade state saved to trade_state.json
+2025-03-10 01:25:53,754 - trade_manager - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action
+2025-03-10 01:26:28,608 - __main__ - INFO - Scheduling first check at 2025-03-10 01:31:00 (4 minutes, 41 seconds from now)
+2025-03-10 01:26:35,067 - __main__ - INFO - Bot running. Press Ctrl+C to stop.
+2025-03-10 01:26:58,386 - __main__ - INFO - Waiting for next check time...
+2025-03-10 01:27:24,198 - __main__ - ERROR - Unexpected error: 
+2025-03-10 01:27:27,653 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:27:28,067 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:27:28,192 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:27:28,327 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:27:28,503 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:27:28,652 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:27:29,189 - trade_manager - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action
+2025-03-10 01:27:30,309 - __main__ - INFO - Scheduling first check at 2025-03-10 01:31:00 (3 minutes, 30 seconds from now)
+2025-03-10 01:27:30,777 - __main__ - INFO - Bot running. Press Ctrl+C to stop.
+2025-03-10 01:27:32,435 - __main__ - INFO - Waiting for next check time...
+2025-03-10 01:27:53,107 - __main__ - INFO - Running trading cycle...
+2025-03-10 01:28:23,876 - utils - INFO - Successfully fetched 30 candles of BTC data
+2025-03-10 01:32:13,453 - __main__ - ERROR - Unexpected error: 
+2025-03-10 01:33:00,352 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:33:00,603 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:33:00,605 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:33:00,606 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:33:00,607 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:33:00,608 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:33:00,856 - trade_manager - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action
+2025-03-10 01:33:00,858 - __main__ - INFO - Scheduling first check at 2025-03-10 02:01:00 (27 minutes, 59 seconds from now)
+2025-03-10 01:33:00,859 - __main__ - INFO - Bot running. Press Ctrl+C to stop.
+2025-03-10 01:33:00,860 - __main__ - INFO - Waiting for next check time...
+2025-03-10 01:33:16,815 - __main__ - ERROR - Unexpected error: 
+2025-03-10 01:33:20,930 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:33:21,671 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:33:23,418 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:33:23,690 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:33:24,407 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:33:24,869 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:33:25,728 - trade_manager - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action
+2025-03-10 01:33:32,075 - trade_manager - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action
+2025-03-10 01:38:22,851 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:38:23,299 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:39:05,661 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:39:06,630 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:39:08,106 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:39:08,585 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:39:09,412 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:39:09,941 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:39:11,112 - trade_manager - INFO - Leverage set to 10x for BTCUSDT
+2025-03-10 01:40:08,402 - __main__ - INFO - Scheduling first check at 2025-03-10 02:01:00 (20 minutes, 54 seconds from now)
+2025-03-10 01:40:09,878 - __main__ - INFO - Bot running. Press Ctrl+C to stop.
+2025-03-10 01:40:11,257 - __main__ - INFO - Waiting for next check time...
+2025-03-10 01:40:11,857 - __main__ - INFO - Running trading cycle...
+2025-03-10 01:40:14,892 - utils - INFO - Successfully fetched 30 half-hour interval candles (e.g., 9:30-10:30)
+2025-03-10 01:51:16,475 - __main__ - ERROR - Unexpected error: 
+2025-03-10 01:51:41,457 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:51:41,681 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:51:41,683 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:51:41,684 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:51:41,685 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:51:41,686 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:51:42,025 - trade_manager - INFO - Leverage set to 10x for BTCUSDT
+2025-03-10 01:54:44,582 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-10 01:54:44,872 - __main__ - INFO - Binance client initialized successfully
+2025-03-10 01:54:44,873 - __main__ - INFO - Trading with capital: $5000
+2025-03-10 01:54:44,874 - __main__ - INFO - Leverage: 10x
+2025-03-10 01:54:44,875 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-10 01:54:44,877 - __main__ - INFO - Stop Loss: $100
+2025-03-10 01:54:45,228 - trade_manager - INFO - Leverage set to 10x for BTCUSDT
+2025-03-10 01:54:49,078 - __main__ - INFO - Scheduling first check at 2025-03-10 02:31:00 IST (36 minutes, 14 seconds from now)
+2025-03-10 01:54:58,483 - __main__ - INFO - Bot running. Press Ctrl+C to stop.
+2025-03-10 01:55:00,782 - __main__ - INFO - Waiting for next check time...
+2025-03-10 01:55:01,532 - __main__ - INFO - Running trading cycle...
+2025-03-10 01:55:03,197 - utils - INFO - Fetching data from 2025-03-08 13:30:00+00:00 to 2025-03-09 19:30:00+00:00 UTC
+2025-03-10 01:55:03,704 - utils - INFO - Successfully fetched 30 hourly candles in IST time
+2025-03-10 01:55:03,708 - utils - INFO - Data range: 2025-03-08 19:30:00+05:30 to 2025-03-10 00:30:00+05:30 IST
+2025-03-10 01:59:17,913 - __main__ - ERROR - Unexpected error: 

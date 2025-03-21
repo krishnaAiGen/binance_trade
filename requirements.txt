@@ -1,0 +1,5 @@
+python-binance==1.0.16
+pandas==1.5.3
+numpy==1.24.2
+schedule==1.1.0
+pytz==2023.3

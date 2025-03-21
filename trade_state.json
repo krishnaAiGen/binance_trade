@@ -1,0 +1,9 @@
+{
+    "in_trade": false,
+    "entry_price": 0,
+    "entry_time": "",
+    "quantity": 0,
+    "market_order_id": "",
+    "stop_loss_order_id": "",
+    "target_order_id": ""
+}
