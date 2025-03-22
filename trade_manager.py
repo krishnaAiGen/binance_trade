@@ -8,6 +8,16 @@ import logging
 import time
 from datetime import datetime
 from binance.enums import *
+# Explicitly import order types to avoid any missing constants
+from binance.client import Client
+# Define constants if they're not available in the imported module
+ORDER_TYPE_STOP_MARKET = 'STOP_MARKET'
+ORDER_TYPE_MARKET = 'MARKET'
+ORDER_TYPE_LIMIT = 'LIMIT'
+SIDE_BUY = 'BUY'
+SIDE_SELL = 'SELL'
+TIME_IN_FORCE_GTC = 'GTC'
+
 from utils import save_trade_state, load_trade_state, fetch_btc_data, add_bollinger_bands, get_ist_time
 
 # Setup logging
@@ -64,7 +74,7 @@ class TradeManager:
             logger.error(f"Error checking trade status: {e}")
             return False
 
-    def enter_long_trade(self, quantity):
+    def enter_long_trade(self, quantity, latest_candle=None):
         """Enter a long trade for BTC"""
         if self.is_in_trade():
             logger.info("Already in a trade. Skipping.")
@@ -74,6 +84,7 @@ class TradeManager:
             ist_time = get_ist_time()
             print("TAKEN TRADE at time", ist_time)
             logger.info(f"TAKEN TRADE at time {ist_time}")
+            
             # 1. Place market buy order
             market_order = self.client.futures_create_order(
                 symbol=self.symbol,
@@ -81,6 +92,11 @@ class TradeManager:
                 type=ORDER_TYPE_MARKET,
                 quantity=quantity
             )
+            
+            logger.info(f"Market order placed successfully: Order ID {market_order['orderId']}")
+            
+            # Wait for the order to be filled and processed
+            time.sleep(2)
             
             # Get entry price
             ticker = self.client.get_symbol_ticker(symbol=self.symbol)
@@ -91,30 +107,50 @@ class TradeManager:
             stop_price = round(stop_price, 1)  # Round to 1 decimal for BTC
             
             # 3. Place stop loss order
-            stop_loss_order = self.client.futures_create_order(
-                symbol=self.symbol,
-                side=SIDE_SELL,
-                type=ORDER_TYPE_STOP_MARKET,
-                stopPrice=stop_price,
-                closePosition='true'
-            )
+            logger.info(f"Placing stop loss order at ${stop_price}...")
+            try:
+                stop_loss_order = self.client.futures_create_order(
+                    symbol=self.symbol,
+                    side=SIDE_SELL,
+                    type=ORDER_TYPE_STOP_MARKET,
+                    stopPrice=stop_price,
+                    closePosition='true'
+                )
+                logger.info(f"Stop loss order placed successfully: Order ID {stop_loss_order['orderId']}")
+            except Exception as e:
+                logger.error(f"Failed to place stop loss order: {e}")
+                # Cancel the market order and exit
+                self.cancel_all_orders()
+                return False
             
             # 4. Get latest Bollinger Bands data
-            data = fetch_btc_data(self.client, limit=30, interval='1h')
-            data = add_bollinger_bands(data, period=10, std_dev=1.5)
-            upper_band = data['Upper_Band'].iloc[-1]
+            # If latest_candle wasn't provided, fetch it now
+            if latest_candle is None:
+                data = fetch_btc_data(self.client, limit=30, interval='1h')
+                data = add_bollinger_bands(data, period=10, std_dev=1.5)
+                latest_candle = data.iloc[-1]
+                
+            upper_band = latest_candle['Upper_Band']
             
             # 5. Place take profit order at the upper Bollinger Band
             target_price = round(upper_band, 1)  # Round to 1 decimal
             
-            take_profit_order = self.client.futures_create_order(
-                symbol=self.symbol,
-                side=SIDE_SELL,
-                type=ORDER_TYPE_LIMIT,
-                timeInForce=TIME_IN_FORCE_GTC,
-                quantity=quantity,
-                price=target_price
-            )
+            logger.info(f"Placing take profit order at ${target_price}...")
+            try:
+                take_profit_order = self.client.futures_create_order(
+                    symbol=self.symbol,
+                    side=SIDE_SELL,
+                    type=ORDER_TYPE_LIMIT,
+                    timeInForce=TIME_IN_FORCE_GTC,
+                    quantity=quantity,
+                    price=target_price
+                )
+                logger.info(f"Take profit order placed successfully: Order ID {take_profit_order['orderId']}")
+            except Exception as e:
+                logger.error(f"Failed to place take profit order: {e}")
+                # Cancel previous orders and exit
+                self.cancel_all_orders()
+                return False
             
             # Update trade state
             self.trade_state = {
@@ -132,9 +168,33 @@ class TradeManager:
             # Save trade state to file
             save_trade_state(self.trade_state)
             
-            logger.info(f"Entered long trade: {quantity} BTC at ${entry_price}")
-            logger.info(f"Stop loss set at: ${stop_price}")
-            logger.info(f"Take profit set at: ${target_price}")
+            # Log detailed trade information
+            logger.info(f"------------- TRADE ENTRY DETAILS -------------")
+            logger.info(f"Entry price: ${entry_price}")
+            logger.info(f"Quantity: {quantity} BTC (${entry_price * quantity:.2f})")
+            logger.info(f"Stop loss: ${stop_price} (${entry_price - stop_price:.2f} points)")
+            logger.info(f"Take profit: ${target_price} (${target_price - entry_price:.2f} points)")
+            
+            if latest_candle is not None:
+                logger.info(f"------------- CANDLE & INDICATOR DETAILS -------------")
+                logger.info(f"Signal candle time: {latest_candle['timestamp_ist']}")
+                logger.info(f"OHLC: Open=${latest_candle['open']:.2f}, High=${latest_candle['high']:.2f}, Low=${latest_candle['low']:.2f}, Close=${latest_candle['close']:.2f}")
+                logger.info(f"Bollinger Bands - Lower: ${latest_candle['Lower_Band']:.2f}, SMA: ${latest_candle['SMA']:.2f}, Upper: ${latest_candle['Upper_Band']:.2f}")
+                bb_width = latest_candle['Upper_Band'] - latest_candle['Lower_Band']
+                logger.info(f"BB Width: ${bb_width:.2f}")
+                
+                # Check specifically what triggered the trade
+                if latest_candle['low'] <= latest_candle['Lower_Band'] and latest_candle['close'] <= latest_candle['Lower_Band']:
+                    logger.info(f"Signal type: Both LOW and CLOSE are below the lower band")
+                elif latest_candle['low'] <= latest_candle['Lower_Band']:
+                    logger.info(f"Signal type: LOW price (${latest_candle['low']:.2f}) is below lower band (${latest_candle['Lower_Band']:.2f})")
+                elif latest_candle['close'] <= latest_candle['Lower_Band']:
+                    logger.info(f"Signal type: CLOSE price (${latest_candle['close']:.2f}) is below lower band (${latest_candle['Lower_Band']:.2f})")
+                
+                logger.info(f"Distance to lower band: ${latest_candle['close'] - latest_candle['Lower_Band']:.2f} points")
+                logger.info(f"Distance to upper band: ${latest_candle['Upper_Band'] - latest_candle['close']:.2f} points")
+            
+            logger.info(f"--------------------------------------------")
             
             return True
         

@@ -210,11 +210,12 @@ def get_trade_quantity(client, trading_capital, leverage=10):
     
 
 def get_ist_time():
+    """Get current time in IST format with timezone indicator"""
     ist_timezone = pytz.timezone('Asia/Kolkata')    
     current_utc_time = datetime.now(pytz.utc)
     
     current_ist_time = current_utc_time.astimezone(ist_timezone)    
-    ist_time_string = current_ist_time.strftime('%Y-%m-%d %H:%M:%S')
+    ist_time_string = current_ist_time.strftime('%Y-%m-%d %H:%M:%S IST')
     
     return ist_time_string
     

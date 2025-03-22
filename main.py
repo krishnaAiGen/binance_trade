@@ -83,7 +83,15 @@ def run_trading_cycle(client, trade_manager, config):
     
     # Check for trade signal
     if check_trade_signal(data):
+        # Get the latest candle data
+        latest_candle = data.iloc[-1]
+        
+        # Log detailed information about the trade signal
         logger.info("Trade signal detected! Price touching lower Bollinger Band with width > 300")
+        logger.info(f"Latest candle - Time: {latest_candle['timestamp_ist']}")
+        logger.info(f"Latest candle - OHLC: Open=${latest_candle['open']:.2f}, High=${latest_candle['high']:.2f}, Low=${latest_candle['low']:.2f}, Close=${latest_candle['close']:.2f}")
+        logger.info(f"Bollinger Bands - Lower: ${latest_candle['Lower_Band']:.2f}, SMA: ${latest_candle['SMA']:.2f}, Upper: ${latest_candle['Upper_Band']:.2f}")
+        logger.info(f"BB Width: ${latest_candle['Upper_Band'] - latest_candle['Lower_Band']:.2f}")
         
         # Calculate trade quantity
         trading_capital = config.get('TRADING_CAPITAL', 5000)
@@ -93,8 +101,10 @@ def run_trading_cycle(client, trade_manager, config):
             logger.error("Invalid trade quantity calculated")
             return
         
+        logger.info(f"Attempting to enter trade with quantity: {quantity} BTC")
+        
         # Enter the trade
-        success = trade_manager.enter_long_trade(quantity)
+        success = trade_manager.enter_long_trade(quantity, latest_candle)
         if success:
             logger.info(f"Successfully entered long trade with {quantity} BTC")
         else:
@@ -122,38 +132,46 @@ def main():
     # Initialize trade manager with config
     trade_manager = TradeManager(client, config)
     
-    # Schedule first check at the next minute 31
-    next_check = get_next_check_time()
-    
-    # Convert current time to IST for comparison
+    # Get IST timezone
     ist_timezone = pytz.timezone('Asia/Kolkata')
-    now_ist = datetime.now(ist_timezone)
     
-    # Calculate seconds until next check (comparing two timezone-aware datetimes)
-    seconds_until_next_check = (next_check - now_ist).total_seconds()
+    # Log that we're using IST for scheduling
+    logger.info("Bot will run checks at the 31st minute of every hour in IST time")
     
-    logger.info(f"Scheduling first check at {next_check.strftime('%Y-%m-%d %H:%M:%S')} IST "
-                f"({int(seconds_until_next_check/60)} minutes, {int(seconds_until_next_check%60)} seconds from now)")
-    
-    # Schedule checks at minute 31 of every hour (in IST time)
-    schedule.every().hour.at(":31").do(run_trading_cycle, client=client, trade_manager=trade_manager, config=config)
-    
-    # Main loop
+    # Main loop - manually handle scheduling to ensure IST time is used
     logger.info("Bot running. Press Ctrl+C to stop.")
     try:
-        if seconds_until_next_check > 0:
-            logger.info(f"Waiting for next check time...")
-            time.sleep(seconds_until_next_check)
-            # Run first check
-            run_trading_cycle(client, trade_manager, config)
-        
         while True:
-            schedule.run_pending()
-            time.sleep(1)
+            # Get current time in IST
+            now_ist = datetime.now(ist_timezone)
+            
+            # Check if it's the 31st minute of the hour in IST
+            if now_ist.minute == 31 and now_ist.second < 10:  # Allow a 10-second window to avoid missing the check
+                logger.info(f"Running scheduled check at {now_ist.strftime('%Y-%m-%d %H:%M:%S')} IST")
+                run_trading_cycle(client, trade_manager, config)
+                # Sleep for 50 seconds to avoid multiple executions in the same minute
+                time.sleep(50)
+            
+            # Calculate time until next check
+            if now_ist.minute < 31:
+                next_check = now_ist.replace(minute=31, second=0, microsecond=0)
+            else:
+                next_check = (now_ist.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)).replace(minute=31)
+            
+            seconds_to_wait = (next_check - now_ist).total_seconds()
+            
+            # If next check is more than 5 minutes away, log and sleep for 60 seconds
+            # Otherwise, sleep for a shorter time to ensure we don't miss the check
+            if seconds_to_wait > 300:  # More than 5 minutes
+                time.sleep(60)  # Check every minute
+            else:
+                time.sleep(5)   # Check every 5 seconds when we're closer to the check time
+                
     except KeyboardInterrupt:
         logger.info("Bot stopped by user")
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
-    
+        logger.exception(e)  # Log full traceback
+
 if __name__ == "__main__":
     main()
