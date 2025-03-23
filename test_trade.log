@@ -58,3 +58,36 @@ binance.exceptions.BinanceAPIException: APIError(code=-4164): Order's notional m
 2025-03-22 22:12:48,442 - __main__ - INFO - --------------------------------
 2025-03-22 22:12:48,442 - __main__ - INFO - Test trade placed successfully. Monitor the orders in your Binance account.
 2025-03-22 22:12:48,443 - __main__ - INFO - Test completed successfully. Check your Binance account for the orders.
+2025-03-24 01:20:05,811 - __main__ - INFO - Starting Binance trading test script
+2025-03-24 01:20:06,030 - __main__ - INFO - Binance client initialized successfully
+2025-03-24 01:20:06,264 - __main__ - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action, request ip: 49.43.160.139
+2025-03-24 01:20:06,264 - __main__ - ERROR - Failed to set leverage. Exiting.
+2025-03-24 01:20:06,265 - __main__ - ERROR - Test failed. See logs for details.
+2025-03-24 01:21:52,425 - __main__ - INFO - Starting Binance trading test script
+2025-03-24 01:21:52,681 - __main__ - INFO - Binance client initialized successfully
+2025-03-24 01:21:52,983 - __main__ - INFO - Leverage set to 3x for BTCUSDT
+2025-03-24 01:21:53,015 - __main__ - INFO - ------- STARTING TEST TRADE at 2025-03-24 01:21:53 IST -------
+2025-03-24 01:21:53,015 - __main__ - INFO - Symbol: BTCUSDT
+2025-03-24 01:21:53,015 - __main__ - INFO - Leverage: 3x
+2025-03-24 01:21:53,015 - __main__ - INFO - Quantity: 0.01 BTC
+2025-03-24 01:21:53,015 - __main__ - INFO - Stop Loss: $100 below entry
+2025-03-24 01:21:53,015 - __main__ - INFO - Take Profit: $500 above entry
+2025-03-24 01:21:53,015 - __main__ - INFO - Placing market buy order...
+2025-03-24 01:21:53,210 - __main__ - INFO - Market order placed successfully: Order ID 634154122045
+2025-03-24 01:21:55,399 - __main__ - INFO - Entry price: $85023.53
+2025-03-24 01:21:55,400 - __main__ - INFO - Placing stop loss order at $84923.5...
+2025-03-24 01:21:55,600 - __main__ - INFO - Stop loss order placed successfully: Order ID 634154124845
+2025-03-24 01:21:55,600 - __main__ - INFO - Placing take profit order at $85523.5...
+2025-03-24 01:21:55,785 - __main__ - INFO - Take profit order placed successfully: Order ID 634154125809
+2025-03-24 01:21:55,785 - __main__ - INFO - ------- TEST TRADE SUMMARY -------
+2025-03-24 01:21:55,785 - __main__ - INFO - Entry Price: $85023.53
+2025-03-24 01:21:55,786 - __main__ - INFO - Stop Loss: $84923.5 ($100.03 points below entry)
+2025-03-24 01:21:55,786 - __main__ - INFO - Take Profit: $85523.5 ($499.97 points above entry)
+2025-03-24 01:21:55,786 - __main__ - INFO - Market Order ID: 634154122045
+2025-03-24 01:21:55,786 - __main__ - INFO - Stop Loss Order ID: 634154124845
+2025-03-24 01:21:55,786 - __main__ - INFO - Take Profit Order ID: 634154125809
+2025-03-24 01:21:55,786 - __main__ - INFO - --------------------------------
+2025-03-24 01:21:55,786 - __main__ - INFO - Test trade placed successfully. Monitor the orders in your Binance account.
+2025-03-24 01:21:55,787 - __main__ - INFO - Test completed successfully. Check your Binance account for the orders.
+2025-03-24 01:27:41,090 - __main__ - INFO - Binance client initialized successfully
+2025-03-24 01:30:09,031 - __main__ - INFO - Binance client initialized successfully

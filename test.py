@@ -187,5 +187,6 @@ def main():
     else:
         logger.error("Test failed. See logs for details.")
 
+
 if __name__ == "__main__":
     main() 

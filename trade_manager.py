@@ -49,12 +49,12 @@ class TradeManager:
         return self.trade_state["in_trade"]
 
     def check_trade_status(self):
-        """Check the status of current orders"""
+        """Check the status of current orders and cancel remaining orders if a trade has completed"""
         if not self.is_in_trade():
             return False
         
         try:
-            # Check if target was hit
+            # Get IDs of our target and stop loss orders
             target_id = self.trade_state["target_order_id"]
             stop_id = self.trade_state["stop_loss_order_id"]
             
@@ -62,14 +62,53 @@ class TradeManager:
             open_orders = self.client.futures_get_open_orders(symbol=self.symbol)
             open_order_ids = [order['orderId'] for order in open_orders]
             
-            # If neither target nor stop loss is in open orders, one was executed
+            # Case 1: Both orders are gone (unusual but possible)
             if target_id not in open_order_ids and stop_id not in open_order_ids:
-                logger.info("Trade has been completed (either target hit or stop loss triggered)")
+                logger.info("Both take profit and stop loss orders are gone. Trade has completed.")
+                self.trade_state["in_trade"] = False
+                save_trade_state(self.trade_state)
+                return True
+                
+            # Case 2: Stop loss is gone but take profit still exists (stop loss was triggered)
+            if stop_id not in open_order_ids and target_id in open_order_ids:
+                logger.info("Stop loss was triggered. Cancelling take profit order.")
+                try:
+                    # Cancel the take profit order
+                    self.client.futures_cancel_order(
+                        symbol=self.symbol,
+                        orderId=target_id
+                    )
+                    logger.info(f"Successfully cancelled take profit order (ID: {target_id})")
+                except Exception as e:
+                    logger.error(f"Error cancelling take profit order: {e}")
+                
+                # Mark trade as complete
+                self.trade_state["in_trade"] = False
+                save_trade_state(self.trade_state)
+                return True
+                
+            # Case 3: Take profit is gone but stop loss still exists (take profit was triggered)
+            if target_id not in open_order_ids and stop_id in open_order_ids:
+                logger.info("Take profit was triggered. Cancelling stop loss order.")
+                try:
+                    # Cancel the stop loss order
+                    self.client.futures_cancel_order(
+                        symbol=self.symbol,
+                        orderId=stop_id
+                    )
+                    logger.info(f"Successfully cancelled stop loss order (ID: {stop_id})")
+                except Exception as e:
+                    logger.error(f"Error cancelling stop loss order: {e}")
+                
+                # Mark trade as complete
                 self.trade_state["in_trade"] = False
                 save_trade_state(self.trade_state)
                 return True
             
+            # If we reach here, both orders are still open - trade is ongoing
+            logger.info("Trade is still active. Both take profit and stop loss orders exist.")
             return False
+            
         except Exception as e:
             logger.error(f"Error checking trade status: {e}")
             return False

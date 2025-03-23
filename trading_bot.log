@@ -79,3 +79,14 @@
 2025-03-10 01:55:03,704 - utils - INFO - Successfully fetched 30 hourly candles in IST time
 2025-03-10 01:55:03,708 - utils - INFO - Data range: 2025-03-08 19:30:00+05:30 to 2025-03-10 00:30:00+05:30 IST
 2025-03-10 01:59:17,913 - __main__ - ERROR - Unexpected error: 
+2025-03-24 01:19:57,840 - __main__ - INFO - Starting BTC Bollinger Bands Trading Bot
+2025-03-24 01:19:58,100 - __main__ - INFO - Binance client initialized successfully
+2025-03-24 01:19:58,100 - __main__ - INFO - Trading with capital: $500
+2025-03-24 01:19:58,100 - __main__ - INFO - Leverage: 3x
+2025-03-24 01:19:58,100 - __main__ - INFO - Bollinger Bands: Period=10, StdDev=1.5
+2025-03-24 01:19:58,101 - __main__ - INFO - Min Bollinger Band Width: 300
+2025-03-24 01:19:58,101 - __main__ - INFO - Stop Loss: $100
+2025-03-24 01:19:58,390 - trade_manager - ERROR - Error setting leverage: APIError(code=-2015): Invalid API-key, IP, or permissions for action, request ip: 49.43.160.139
+2025-03-24 01:19:58,423 - __main__ - INFO - Bot will run checks at the 31st minute of every hour in IST time
+2025-03-24 01:19:58,423 - __main__ - INFO - Bot running. Press Ctrl+C to stop.
+2025-03-24 01:20:02,296 - __main__ - INFO - Bot stopped by user
